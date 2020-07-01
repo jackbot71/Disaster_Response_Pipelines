@@ -5,15 +5,14 @@ from sqlalchemy import create_engine
 
 def load_data(messages_filepath, categories_filepath):
     '''
-    This function imports the csv files for the messages and their associated categories.
+    This function imports the csv files for the messages and their associated categories, and combines them in one dataframe.
     
     INPUT:
     messages_filepath - path to the csv file containing the messages
     categories_filepath - path to the csv file containing the categories for each message
     
     OUTPUT:
-    messages - dataframe containing the messages
-    categories - dataframe containing the categories for each message
+    df - dataframe combining the messages and the raw data for their associated categories
     '''
     
     # Import message data
@@ -22,11 +21,13 @@ def load_data(messages_filepath, categories_filepath):
     # Import category data
     categories = pd.read_csv(categories_filepath)
     
-    return messages, categories
-
-def clean_data(df):
     # Merge the two datasets together using the id
     df = pd.merge(messages, categories, on='id')
+        
+    return df
+
+def clean_data(df):
+    pass
 
 
 def save_data(df, database_filename):
