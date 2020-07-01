@@ -24,7 +24,26 @@ import pickle
 
 
 def load_data(database_filepath):
-    pass
+    '''
+    This function loads the dataframe from the database where it is stored, and splits it into predictors and outputs dataframes.
+
+    INPUT:
+    database_filepath - the name of the file containing the dataframe
+
+    OUTPUT:
+    X - predictor dataframe, containing the message text
+    Y - output dataframe, containing the message categories
+    '''
+
+    # Load data from database
+    engine = create_engine('sqlite:///DisasterResponse.db')
+    df = pd.read_sql_table('msg_df', con=engine)
+
+    # Split into X and Y
+    X = df.iloc[:, 1]
+    Y = df.drop(columns=['id', 'message', 'original', 'genre'])
+
+    return X, Y
 
 
 def tokenize(text):
