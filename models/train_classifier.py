@@ -43,7 +43,7 @@ def load_data(database_filepath):
     X = df.iloc[:, 1]
     Y = df.drop(columns=['id', 'message', 'original', 'genre'])
 
-    return X, Y
+    return X, Y, Y.columns
 
 
 def tokenize(text):
@@ -73,7 +73,37 @@ def tokenize(text):
 
 
 def build_model():
-    pass
+    '''
+    This function builds a model with a pipeline that tokenizes and extracts features from the messages, and creates a multi-output classifier with it using gridsearch.
+
+    INPUT:
+    None
+
+    OUTPUT:
+    cv - model including text processing and multi-output classifier
+    '''
+    # Create the feature extraction and modelling pipeline
+    pipeline = Pipeline([
+    
+        ('text_pipeline', Pipeline([
+            ('vect', CountVectorizer(tokenizer=tokenize)),
+            ('tfidf', TfidfTransformer())
+        ])),
+    
+        ('clf', MultiOutputClassifier(RandomForestClassifier()))
+    ])
+
+    # Specify the parameters for the grid search
+    parameters = {
+        'text_pipeline__tfidf__use_idf': (True, False),
+        'clf__estimator__n_estimators': [10],
+        'clf__estimator__min_samples_split': [2, 3, 4]
+    }
+    
+    # Create gridsearch object
+    cv = GridSearchCV(pipeline, param_grid=parameters, verbose=100)
+
+    return cv
 
 
 def evaluate_model(model, X_test, Y_test, category_names):
