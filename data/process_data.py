@@ -74,7 +74,24 @@ def clean_data(df):
 
 
 def save_data(df, database_filename):
-    pass  
+    '''
+    This function saves the clean dataset into an sqlite database.
+
+    INPUT:
+    df - the dataframe containing the cleaned data to be saved in the database
+    database_filename - the name to be given to the file in the database
+
+    OUTPUT:
+    None
+    '''
+
+    # Connect to the sqlite database
+    engine = create_engine('sqlite:///DisasterResponse.db')
+
+    # Save the clean dataframe in the sqlite database
+    df.to_sql(database_filename, engine, index=False)
+
+    return None
 
 
 def main():
