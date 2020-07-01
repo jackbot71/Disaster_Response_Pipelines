@@ -47,7 +47,29 @@ def load_data(database_filepath):
 
 
 def tokenize(text):
-    pass
+    '''
+    This function takes a text as input and performs case normalisation, tokenization and lemmatization on it.
+    
+    INPUT:
+    text - the text to be processed
+    
+    OUTPUT:
+    clean_tokens - list of the cleaned tokens extracted from the input text
+    '''
+
+     # Case normalisation
+    text = text.lower()
+    
+    # Tokenization
+    tokens = word_tokenize(text)
+    
+    # Initialise lemmatizer
+    lemmatizer = WordNetLemmatizer()
+    
+    # Create a list comprehension to store the clean tokens
+    clean_tokens = [lemmatizer.lemmatize(w) for w in tokens]
+    
+    return clean_tokens  
 
 
 def build_model():
