@@ -43,7 +43,7 @@ def load_data(database_filepath):
     X = df.iloc[:, 1]
     Y = df.drop(columns=['id', 'message', 'original', 'genre'])
 
-    return X, Y, Y.columns
+    return X, Y
 
 
 def tokenize(text):
@@ -106,9 +106,51 @@ def build_model():
     return cv
 
 
-def evaluate_model(model, X_test, Y_test, category_names):
-    pass
+def evaluate_model(model, X_test, Y_test):
+    '''
+    This function calculates the precision, recall, f1-score and accuracy, prints and returns them in a dataframe.
+    
+    INPUT:
+    model - the model to evaluate
+    X_test - ndarray containing the predictions from the model
+    Y_test - dataframe containing the test values
+    
+    OUTPUT:
+    score_df - dataframe containing the precision, recall, f1-score and accuracy for every output
+    '''
 
+    # Calculate Y_pred using the model
+    Y_pred = model.predict(X_test)
+
+    # Create a dataframe that will hold the precision, recall and f1-score for each column
+    score_df = pd.DataFrame(columns=['precision', 'recall', 'f1_score', 'support'])
+
+    # Iterate through the columns to calculate the precision, recall and f1-score and append it as a row to score_df
+    for col in range(len(Y_test.columns)):
+        col_score = pd.Series(score(np.array(Y_test)[:, col], Y_pred[:, col], average='binary'), index=score_df.columns)
+        score_df = score_df.append(col_score, ignore_index=True)
+
+    # Label the index of score_df with the column names
+    score_df.index = Y_test.columns
+
+    # Drop the "support" scores, as we are dealing with binary data here (2-class output)
+    score_df.drop(columns='support', inplace=True)
+    
+    # Create empty list to hold accuracy values
+    accuracy = []
+    
+    # Iterate through columns and calculate accuracy
+    for col in range(len(Y_test.columns)):
+        accuracy.append(accuracy_score(np.array(Y_test)[:, col], Y_pred[:, col]))
+    
+    # Add accuracy to the score_df
+    score_df['accuracy'] = pd.Series(accuracy, index=Y_test.columns)
+
+    # Print score_df
+    print(score_df)
+    
+    return score_df
+   
 
 def save_model(model, model_filepath):
     pass
@@ -118,7 +160,7 @@ def main():
     if len(sys.argv) == 3:
         database_filepath, model_filepath = sys.argv[1:]
         print('Loading data...\n    DATABASE: {}'.format(database_filepath))
-        X, Y, category_names = load_data(database_filepath)
+        X, Y = load_data(database_filepath)
         X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.2)
         
         print('Building model...')
@@ -128,7 +170,7 @@ def main():
         model.fit(X_train, Y_train)
         
         print('Evaluating model...')
-        evaluate_model(model, X_test, Y_test, category_names)
+        evaluate_model(model, X_test, Y_test)
 
         print('Saving model...\n    MODEL: {}'.format(model_filepath))
         save_model(model, model_filepath)
