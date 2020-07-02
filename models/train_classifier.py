@@ -36,7 +36,7 @@ def load_data(database_filepath):
     '''
 
     # Load data from database
-    engine = create_engine('sqlite:///DisasterResponse.db')
+    engine = create_engine('sqlite:///' + database_filepath)
     df = pd.read_sql_table('msg_df', con=engine)
 
     # Split into X and Y

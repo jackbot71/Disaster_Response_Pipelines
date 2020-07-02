@@ -86,10 +86,10 @@ def save_data(df, database_filename):
     '''
 
     # Connect to the sqlite database
-    engine = create_engine('sqlite:///DisasterResponse.db')
+    engine = create_engine('sqlite:///' + database_filename)
 
     # Save the clean dataframe in the sqlite database
-    df.to_sql(database_filename, engine, index=False)
+    df.to_sql('msg_df', engine, index=False)
 
     return None
 
