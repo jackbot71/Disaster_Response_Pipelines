@@ -153,7 +153,20 @@ def evaluate_model(model, X_test, Y_test):
    
 
 def save_model(model, model_filepath):
-    pass
+    '''
+    This function saves the provided model under the provided file path.
+
+    INPUT:
+    model - the model to save
+    model_filepath - the file path under which to save the model
+
+    OUTPUT:
+    None
+    '''
+
+    # Export the model as a pickle file
+    with open(model_filepath, 'wb') as file:
+        pickle.dump(model, file)
 
 
 def main():
