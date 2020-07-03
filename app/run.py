@@ -45,7 +45,13 @@ def index():
 
     classes_counts = df.drop(columns=['id', 'message', 'original', 'genre']).melt().groupby('variable').sum()['value']
     classes_names = list(classes_counts.index)
+
+    df['translated'] = ~((df['message'] == df['original']) | df['original'].isnull())
+    df['translated'] = df['translated'].map({False: 'Not translated', True: 'Translated'})
     
+    translated_counts = df.groupby('translated').count()['message']
+    translated_names = list(translated_counts.index)
+
     # create visuals
     # TODO: Below is an example - modify to create your own visuals
     graphs = [
@@ -82,6 +88,24 @@ def index():
                 },
                 'xaxis': {
                     'title': "Class"
+                }
+            }
+        },
+        {
+            'data': [
+                Bar(
+                    x=translated_names,
+                    y=translated_counts
+                )
+            ],
+
+            'layout': {
+                'title': 'Count of Translated vs Untranslated Messages',
+                'yaxis': {
+                    'title': "Count"
+                },
+                'xaxis': {
+                    'title': "Translated"
                 }
             }
         }
