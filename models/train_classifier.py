@@ -23,12 +23,13 @@ from sklearn.metrics import precision_recall_fscore_support as score
 import pickle
 
 
-def load_data(database_filepath):
+def load_data(database_filename, database_tablename):
     '''
     This function loads the dataframe from the database where it is stored, and splits it into predictors and outputs dataframes.
 
     INPUT:
-    database_filepath - the name of the file containing the dataframe
+    database_filename - the name given to the database file
+    database_tablename - the name given to the clean data table in the database
 
     OUTPUT:
     X - predictor dataframe, containing the message text
@@ -36,8 +37,8 @@ def load_data(database_filepath):
     '''
 
     # Load data from database
-    engine = create_engine('sqlite:///' + database_filepath)
-    df = pd.read_sql_table('msg_df', con=engine)
+    engine = create_engine('sqlite:///' + database_filename)
+    df = pd.read_sql_table(database_tablename, con=engine)
 
     # Split into X and Y
     X = df.iloc[:, 1]
