@@ -96,9 +96,9 @@ def save_data(df, database_filename, database_tablename):
 
 
 def main():
-    if len(sys.argv) == 4:
+    if len(sys.argv) == 5:
 
-        messages_filepath, categories_filepath, database_filepath = sys.argv[1:]
+        messages_filepath, categories_filepath, database_filepath, database_tablename = sys.argv[1:]
 
         print('Loading data...\n    MESSAGES: {}\n    CATEGORIES: {}'
               .format(messages_filepath, categories_filepath))
@@ -108,7 +108,7 @@ def main():
         df = clean_data(df)
         
         print('Saving data...\n    DATABASE: {}'.format(database_filepath))
-        save_data(df, database_filepath)
+        save_data(df, database_filepath, database_tablename)
         
         print('Cleaned data saved to database!')
     
@@ -116,9 +116,9 @@ def main():
         print('Please provide the filepaths of the messages and categories '\
               'datasets as the first and second argument respectively, as '\
               'well as the filepath of the database to save the cleaned data '\
-              'to as the third argument. \n\nExample: python process_data.py '\
+              'to and the name of the data table as the third and fourth argument respectively. \n\nExample: python process_data.py '\
               'disaster_messages.csv disaster_categories.csv '\
-              'DisasterResponse.db')
+              'DisasterResponse.db msg_df')
 
 
 if __name__ == '__main__':
