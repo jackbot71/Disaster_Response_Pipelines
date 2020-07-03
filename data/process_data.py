@@ -73,13 +73,14 @@ def clean_data(df):
     return clean_df
 
 
-def save_data(df, database_filename):
+def save_data(df, database_filename, database_tablename):
     '''
     This function saves the clean dataset into an sqlite database.
 
     INPUT:
     df - the dataframe containing the cleaned data to be saved in the database
     database_filename - the name to be given to the file in the database
+    database_tablename - the name to be given to the clean data table in the database
 
     OUTPUT:
     None
@@ -89,7 +90,7 @@ def save_data(df, database_filename):
     engine = create_engine('sqlite:///' + database_filename)
 
     # Save the clean dataframe in the sqlite database
-    df.to_sql('msg_df', engine, index=False)
+    df.to_sql(database_tablename, engine, index=False)
 
     return None
 
