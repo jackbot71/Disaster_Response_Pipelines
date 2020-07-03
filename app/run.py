@@ -44,7 +44,7 @@ def index():
     genre_names = list(genre_counts.index)
 
     classes_counts = df.drop(columns=['id', 'message', 'original', 'genre']).melt().groupby('variable').sum()
-    classes_names = list(classes_counts,index)
+    classes_names = list(classes_counts.index)
     
     # create visuals
     # TODO: Below is an example - modify to create your own visuals
